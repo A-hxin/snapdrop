@@ -13,6 +13,17 @@ process.on('SIGTERM', () => {
 
 const parser = require('ua-parser-js');
 const { uniqueNamesGenerator, animals, colors } = require('unique-names-generator');
+const jpFamilyNames = [
+    '藤原', '高桥', '佐藤', '泽村', '中村', '日向', '远藤', '山田', '神崎'
+];
+
+const jpGivenNames = [
+    '千夏', '夏树', '结衣', '真由', '千早', '杏奈', '美咲', '明日香', '梓'
+];
+
+//
+const ageName = ['鸣人', '佐助', '樱', '艾伦', '三笠', '光彦', '阿良良木', '小松', '凉宫', '黑崎一护']
+
 
 class SnapdropServer {
 
@@ -50,7 +61,7 @@ class SnapdropServer {
     }
 
     _onMessage(sender, message) {
-        // Try to parse message 
+        // Try to parse message
         try {
             message = JSON.parse(message);
         } catch (e) {
@@ -174,7 +185,7 @@ class Peer {
         this._setPeerId(request)
         // is WebRTC supported ?
         this.rtcSupported = request.url.indexOf('webrtc') > -1;
-        // set name 
+        // set name
         this._setName(request);
         // for keepalive
         this.timerId = 0;
@@ -210,11 +221,11 @@ class Peer {
 
 
         let deviceName = '';
-        
+
         if (ua.os && ua.os.name) {
             deviceName = ua.os.name.replace('Mac OS', 'Mac') + ' ';
         }
-        
+
         if (ua.device.model) {
             deviceName += ua.device.model;
         } else {
@@ -224,10 +235,13 @@ class Peer {
         if(!deviceName)
             deviceName = 'Unknown Device';
 
+        // 设备名字
         const displayName = uniqueNamesGenerator({
-            length: 2,
-            separator: ' ',
-            dictionaries: [colors, animals],
+            length: 1,
+            separator: '',
+            //dictionaries: [colors, animals],
+            //dictionaries: [jpFamilyNames, jpGivenNames],
+            dictionaries: [ageName],
             style: 'capital',
             seed: this.id.hashCode()
         })
@@ -289,4 +303,4 @@ Object.defineProperty(String.prototype, 'hashCode', {
   }
 });
 
-const server = new SnapdropServer(process.env.PORT || 3000);
+const server = new SnapdropServer(process.env.PORT || 1234);

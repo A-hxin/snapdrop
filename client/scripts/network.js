@@ -4,6 +4,11 @@ window.isRtcSupported = !!(window.RTCPeerConnection || window.mozRTCPeerConnecti
 class ServerConnection {
 
     constructor() {
+        // 添加：从 localStorage 获取自定义服务器地址和端口
+        this.serverHost = localStorage.getItem('serverHost') || 'localhost';
+        this.serverPort = localStorage.getItem('serverPort') || '1234';
+
+
         this._connect();
         Events.on('beforeunload', e => this._disconnect());
         Events.on('pagehide', e => this._disconnect());
@@ -54,12 +59,17 @@ class ServerConnection {
         this._socket.send(JSON.stringify(message));
     }
 
+    //_endpoint() {
+    //    // hack to detect if deployment or development environment
+    //    const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws';
+    //    const webrtc = window.isRtcSupported ? '/webrtc' : '/fallback';
+    //    const url = protocol + '://' + location.host + location.pathname + 'server' + webrtc;
+    //    return url;
+    //}
     _endpoint() {
-        // hack to detect if deployment or development environment
         const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws';
         const webrtc = window.isRtcSupported ? '/webrtc' : '/fallback';
-        const url = protocol + '://' + location.host + location.pathname + 'server' + webrtc;
-        return url;
+        return `${protocol}://${this.serverHost}:${this.serverPort}${webrtc}`;
     }
 
     _disconnect() {
@@ -70,7 +80,7 @@ class ServerConnection {
 
     _onDisconnect() {
         console.log('WS: server disconnected');
-        Events.fire('notify-user', 'Connection lost. Retry in 5 seconds...');
+        Events.fire('notify-user', '连接丢失! 5 秒后重试...');
         clearTimeout(this._reconnectTimer);
         this._reconnectTimer = setTimeout(_ => this._connect(), 5000);
     }
@@ -187,12 +197,12 @@ class Peer {
 
     _onChunkReceived(chunk) {
         if(!chunk.byteLength) return;
-        
+
         this._digester.unchunk(chunk);
         const progress = this._digester.progress;
         this._onDownloadProgress(progress);
 
-        // occasionally notify sender about our progress 
+        // occasionally notify sender about our progress
         if (progress - this._lastProgress < 0.01) return;
         this._lastProgress = progress;
         this._sendProgress(progress);
@@ -212,7 +222,7 @@ class Peer {
         this._reader = null;
         this._busy = false;
         this._dequeueFile();
-        Events.fire('notify-user', 'File transfer completed.');
+        Events.fire('notify-user', '文件传输已完成。');
     }
 
     sendText(text) {
@@ -254,7 +264,7 @@ class RTCPeer extends Peer {
     }
 
     _openChannel() {
-        const channel = this._conn.createDataChannel('data-channel', { 
+        const channel = this._conn.createDataChannel('data-channel', {
             ordered: true,
             reliable: true // Obsolete. See https://developer.mozilla.org/en-US/docs/Web/API/RTCDataChannel/reliable
         });

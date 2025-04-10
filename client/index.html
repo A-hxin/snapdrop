@@ -72,19 +72,19 @@
     <x-dialog id="receiveDialog">
         <x-background class="full center">
             <x-paper shadow="2">
-                <h3>File Received</h3>
-                <div class="font-subheading" id="fileName">Filename</div>
+                <h3>文件已接收</h3>
+                <div class="font-subheading" id="fileName">文件名</div>
                 <div class="font-body2" id="fileSize"></div>
                 <div class='preview' style="visibility: hidden;">
                     <img id='img-preview' src="">
                 </div>
                 <div class="row">
-                    <label for="autoDownload" class="grow">Ask to save each file before downloading</label>
+                    <label for="autoDownload" class="grow">全选所有</label>
                     <input type="checkbox" id="autoDownload" checked="">
                 </div>
                 <div class="row-reverse">
-                    <a class="button" close id="download" title="Download File" autofocus>Save</a>
-                    <button class="button" close>Ignore</button>
+                    <a class="button" close id="download" title="Download File" autofocus>保存</a>
+                    <button class="button" close>忽视</button>
                 </div>
             </x-paper>
         </x-background>
@@ -94,11 +94,11 @@
         <form action="#">
             <x-background class="full center">
                 <x-paper shadow="2">
-                    <h3>Send a Message</h3>
-                    <div id="textInput" class="textarea" role="textbox" placeholder="Send a message" autocomplete="off" autofocus contenteditable></div>
+                    <h3>发送信息</h3>
+                    <div id="textInput" class="textarea" role="textbox" placeholder="发送消息" autocomplete="off" autofocus contenteditable></div>
                     <div class="row-reverse">
-                        <button class="button" type="submit" close>Send</button>
-                        <a class="button" close>Cancel</a>
+                        <button class="button" type="submit" close>发送</button>
+                        <a class="button" close>取消</a>
                     </div>
                 </x-paper>
             </x-background>
@@ -108,18 +108,18 @@
     <x-dialog id="receiveTextDialog">
         <x-background class="full center">
             <x-paper shadow="2">
-                <h3>Message Received</h3>
+                <h3>已收到消息</h3>
                 <div class="font-subheading" id="text"></div>
                 <div class="row-reverse">
-                    <button class="button" id="copy" close autofocus>Copy</button>
-                    <button class="button" close>Close</button>
+                    <button class="button" id="copy" close autofocus>复制</button>
+                    <button class="button" close>关闭</button>
                 </div>
             </x-paper>
         </x-background>
     </x-dialog>
     <!-- Toast -->
     <div class="toast-container full center">
-        <x-toast class="row" shadow="1" id="toast">File Transfer Completed</x-toast>
+        <x-toast class="row" shadow="1" id="toast">文件传输完成！</x-toast>
     </div>
     <!-- About Page -->
     <x-about id="about" class="full center column">
@@ -215,8 +215,8 @@
     <!-- no script -->
     <noscript>
         <x-noscript class="full center column">
-            <h1>Enable JavaScript</h1>
-            <h3>Snapdrop works only with JavaScript</h3>
+            <h1>启用 JS</h1>
+            <h3>Snardrep 只能使用 JavaScript</h3>
         </x-noscript>
         <style>
         x-noscript {

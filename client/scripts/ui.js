@@ -9,7 +9,7 @@ window.iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 Events.on('display-name', e => {
     const me = e.detail.message;
     const $displayName = $('displayName')
-    $displayName.textContent = 'You are known as ' + me.displayName;
+    $displayName.textContent = '你的设备名称为： ' + me.displayName;
     $displayName.title = me.deviceName;
 });
 
@@ -74,7 +74,7 @@ class PeerUI {
 
     html() {
         return `
-            <label class="column center" title="Click to send files or right click to send a text">
+            <label class="column center" title="单击发送文件或右键单击发送文本">
                 <input type="file" multiple>
                 <x-icon shadow="1">
                     <svg class="icon"><use xlink:href="#"/></svg>
@@ -375,7 +375,7 @@ class ReceiveTextDialog extends Dialog {
 
     async _onCopy() {
         await navigator.clipboard.writeText(this.$text.textContent);
-        Events.fire('notify-user', 'Copied to clipboard');
+        Events.fire('notify-user', '复制到剪贴板!');
     }
 }
 
@@ -415,7 +415,7 @@ class Notifications {
                 Events.fire('notify-user', Notifications.PERMISSION_ERROR || 'Error');
                 return;
             }
-            this._notify('Even more snappy sharing!');
+            this._notify('更快速的分享!');
             this.$button.setAttribute('hidden', 1);
         });
     }
@@ -435,12 +435,12 @@ class Notifications {
         }
 
         // Notification is persistent on Android. We have to close it manually
-        const visibilitychangeHandler = () => {                             
-            if (document.visibilityState === 'visible') {    
+        const visibilitychangeHandler = () => {
+            if (document.visibilityState === 'visible') {
                 notification.close();
                 Events.off('visibilitychange', visibilitychangeHandler);
-            }                                                       
-        };                                                                                
+            }
+        };
         Events.on('visibilitychange', visibilitychangeHandler);
 
         return notification;
@@ -449,10 +449,10 @@ class Notifications {
     _messageNotification(message) {
         if (document.visibilityState !== 'visible') {
             if (isURL(message)) {
-                const notification = this._notify(message, 'Click to open link');
+                const notification = this._notify(message, '点击打开链接');
                 this._bind(notification, e => window.open(message, '_blank', null, true));
             } else {
-                const notification = this._notify(message, 'Click to copy text');
+                const notification = this._notify(message, '点击复制文本');
                 this._bind(notification, e => this._copyText(message, notification));
             }
         }
@@ -460,7 +460,7 @@ class Notifications {
 
     _downloadNotification(message) {
         if (document.visibilityState !== 'visible') {
-            const notification = this._notify(message, 'Click to download');
+            const notification = this._notify(message, '点击下载');
             if (!window.isDownloadSupported) return;
             this._bind(notification, e => this._download(notification));
         }
@@ -498,11 +498,11 @@ class NetworkStatusUI {
     }
 
     _showOfflineMessage() {
-        Events.fire('notify-user', 'You are offline');
+        Events.fire('notify-user', '您掉线了');
     }
 
     _showOnlineMessage() {
-        Events.fire('notify-user', 'You are back online');
+        Events.fire('notify-user', '您已重新连接');
     }
 }
 
@@ -550,7 +550,7 @@ const snapdrop = new Snapdrop();
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
         .then(serviceWorker => {
-            console.log('Service Worker registered');
+            console.log('服务人员已注册');
             window.serviceWorker = serviceWorker
         });
 }
@@ -632,10 +632,8 @@ Events.on('load', () => {
 });
 
 Notifications.PERMISSION_ERROR = `
-Notifications permission has been blocked
-as the user has dismissed the permission prompt several times.
-This can be reset in Page Info
-which can be accessed by clicking the lock icon next to the URL.`;
+由于用户多次忽略权限提示，通知权限已被阻止。
+您可以在页面信息中重置此权限，点击 URL 旁边的锁形图标即可访问。`;
 
 document.body.onclick = e => { // safari hack to fix audio
     document.body.onclick = null;
